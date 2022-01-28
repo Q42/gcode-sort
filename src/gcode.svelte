@@ -116,9 +116,7 @@
 	});
 </script>
 
-<div>
-    <canvas bind:this={canvas}></canvas>
-</div>
+<canvas bind:this={canvas}></canvas>
 
 <style>
     canvas {

@@ -9,6 +9,11 @@
     let cutList;
     let tour;
     let initialTravelDistance;
+    let iterations = 40;
+    let curIter = 0;
+    let displayCuts = true;
+    let progress=0;
+    let isSorted = false;
 
     function parseLine(line) {
         const parts = line.split(' ');
@@ -90,21 +95,20 @@
     }
 
     function iterOptimize() {
-        const iterations = 20;
-        let currentIter = 1;
-
+        isSorted = true;
+        
         optimize();
         function optimize() {
+            progress = iterations && 100*curIter/iterations
+            if (curIter < iterations) {
+                requestAnimationFrame(optimize);
+            }
             tour = two_opt(tour, distanceCutList);
 
             cutList = tour.vertices;
-            console.log(tour.cost, tour.vertices.length);
+            // console.log(tour.cost, tour.vertices.length);
 
-            currentIter++;
-
-            if (currentIter < iterations) {
-                requestAnimationFrame(optimize);
-            }
+            curIter++;
         }
     }
 
@@ -156,27 +160,56 @@
     
     
     {#if file}
-        <button on:click={iterOptimize}>optimize</button>
-        <p>
-            {file.name} - {fileSize(file.size)} <br>
-            G0 / travel: {tour && Math.round(tour.cost)}mm (initial {Math.round(initialTravelDistance)}mm) <br>
-            <!-- G1 / cutting:  -->
-        </p>
-        <button on:click={download}>download</button>
-    {/if}
+        <section>
+            <div class="gcode-wrapper">
+                {#if cutList}
+                    {#if displayCuts}
+                        <Gcode cutList={cutList} draw="cuts" />
+                    {/if}
+                    <Gcode cutList={cutList} draw="points" />
+                    <Gcode cutList={cutList} draw="travel" />
+                {/if}
+            </div>
 
-    {#if cutList}
-        <div class="gcode-wrapper">
-            <Gcode cutList={cutList} draw="cuts" />
-            <Gcode cutList={cutList} draw="points" />
-            <Gcode cutList={cutList} draw="travel" />
+            <div class="controls">
+                <div class="sorting">
+                    <div>
+                        <label for="iterations" >iterations</label>
+                        <input id="iterations" min=1 type=number bind:value={iterations} />
+                    </div>
+                    <button on:click={iterOptimize} disabled={isSorted}>sort</button>
+                    
+                    {#if progress && progress != 100}
+                        <div>
+                            <progress id="progress" max="100" value={progress}></progress>
+                        </div>
+                    {/if}
+                </div>
+
+                <div>
+                    G0 / travel: {tour && Math.round(tour.cost)}mm <br>
+                    (initial {Math.round(initialTravelDistance)}mm) <br>
+                    <!-- G1 / cutting:  -->
+                    
+                    <br>{file.name} - {fileSize(file.size)} <br>
+                    <button on:click={download}>download</button>
+                </div>
+            </div>
+        </section>
+        <div>
+            <input id="displayCuts" type=checkbox bind:checked={displayCuts} />
+            <label for="displayCuts" >show carving</label>
         </div>
     {/if}
 
-    <p>Copyright Q42 2022</p>   
+    <p>Copyright R.Veldkamp, Q42 2022</p>   
 </main>
 
 <style>
+    main {
+        max-width: 900px;
+        margin: auto;
+    }
     .dropzone {
         background-color: rgb(198, 198, 198);
     }
@@ -186,12 +219,33 @@
         display: none;
     }
 
-    .gcode-wrapper {
+    section {
         background-color:rgb(238 238 238);
-        height: 512px;
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
     }
-
-    :global(.gcode-wrapper > * ){
+    
+    :global(.gcode-wrapper  *) {
         position: absolute;
     }
+
+    :global(.gcode-wrapper  :last-child) {
+        position: static;
+    }
+
+    .controls {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .sorting {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* .gcode-wrapper:nth-child(2) {
+        position: absolute;
+    } */
 </style>
