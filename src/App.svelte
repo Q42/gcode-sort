@@ -7,7 +7,8 @@
     import { groupIntoCuts, unParseCuts, parseLine } from "./parser";
 
     let file;
-    let cuts, preamble, postamble;
+    let toolpath, preamble, postamble;
+    let optimizedToolpath;
     let tour;
     let initialTravelDistance;
     let iterations = 40;
@@ -34,11 +35,12 @@
 
     async function updateGcode(file) {
         const lines = await getLines(file);
-        ({ preamble, cuts, postamble } = groupIntoCuts(lines)); //.slice(0,12)
+        ({ preamble, cuts: toolpath, postamble } = groupIntoCuts(lines)); //.slice(0,12)
         // console.log(cutList);
-        initialTravelDistance = distanceCutList( cuts );
+        optimizedToolpath = toolpath.slice();
+        initialTravelDistance = distanceCutList( optimizedToolpath );
         tour = {
-            vertices : cuts,
+            vertices : optimizedToolpath,
             cost : initialTravelDistance
         };
     }
@@ -73,7 +75,7 @@
             }
             tour = two_opt(tour, distanceCutList);
 
-            cuts = tour.vertices;
+            optimizedToolpath = tour.vertices;
             // console.log(tour.cost, tour.vertices.length);
 
             curIter++;
@@ -87,7 +89,7 @@
     }
 
     function download() {
-        let text = unParseCuts(preamble, cuts, postamble);
+        let text = unParseCuts(preamble, optimizedToolpath, postamble);
 
         const el = document.createElement('a');
         el.setAttribute('href','data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -122,12 +124,12 @@
     {#if file}
         <section>
             <div class="gcode-wrapper">
-                {#if cuts}
+                {#if toolpath}
                     {#if displayCuts}
-                        <Gcode cutList={cuts} draw="cuts" />
+                        <Gcode cutList={toolpath} draw="cuts" />
                     {/if}
-                    <Gcode cutList={cuts} draw="points" />
-                    <Gcode cutList={cuts} draw="travel" />
+                    <Gcode cutList={toolpath} draw="points" />
+                    <Gcode cutList={optimizedToolpath} draw="travel" />
                 {/if}
             </div>
 
