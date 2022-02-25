@@ -11,9 +11,12 @@
     let optimizedToolpath;
     let tour;
     let initialTravelDistance;
-    let iterations = 40;
+    let totalDistance = 0;
+    let iterations = 42;
     let curIter = 0;
     let displayCuts = true;
+    let displayZChanges = true;
+    let displayTravel = true;
     let progress = 0;
     let isSorted = false;
 
@@ -33,7 +36,6 @@
         }
     }
 
-    let totalDistance = 0;
     function analyzeGCode(lines) {
         const commands = lines
             .map(line=>parseLine(line))
@@ -121,37 +123,41 @@
         document.body.removeChild(el);
     }
 
-    onMount(async () => {
-        const response = await fetch('/schaakbord.nc');
-        file = await response.blob();
-        await updateGcode( file );
-    });
+    // onMount(async () => {
+    //     const response = await fetch('/schaakbord.nc');
+    //     file = await response.blob();
+    //     await updateGcode( file );
+    // });
 
 </script>
 
 <main>
     <h1>GCODE sorter</h1>
-    <p>Optimize a GCODE file by reducing the total time spent moving the bit (G0) vs cutting or carving (G1)</p>
+    <p>Re-order the operations in a GCODE file to reduce the time spent moving the bit (G0) vs cutting or carving (G1)</p>
     <!-- <p>WARNING: this changes the order of the cuts</p>
     <p>assumes: absolute mode</p> -->
 
     
-    <div class="dropzone" class:hide="{!!file}">
+    <div class="dropzone" class:hide="{!!toolpath}">
         <FileDrop on:filedrop={onFileDrop} fileLimit=1 >
             &nbsp;
         </FileDrop>
     </div>
     
     
-    {#if file}
+    {#if toolpath}
         <section>
             <div class="gcode-wrapper">
                 {#if toolpath}
                     {#if displayCuts}
                         <Gcode cutList={toolpath} draw="cuts" />
                     {/if}
-                    <Gcode cutList={toolpath} draw="points" />
-                    <Gcode cutList={optimizedToolpath} draw="travel" />
+                    {#if displayZChanges}
+                        <Gcode cutList={toolpath} draw="points" />
+                    {/if}
+                    {#if displayTravel}
+                        <Gcode cutList={optimizedToolpath} draw="travel" />
+                    {/if}
                 {/if}
             </div>
 
@@ -159,7 +165,7 @@
                 <div class="sorting">
                     <div>
                         <label for="iterations" >iterations</label>
-                        <input id="iterations" min=1 type=number bind:value={iterations} />
+                        <input id="iterations" min=1 type=number bind:value={iterations} disabled={isSorted} />
                     </div>
                     <button on:click={iterOptimize} disabled={isSorted}>sort</button>
                     
@@ -178,29 +184,49 @@
                         <tr><th>travel saved</th><td>{ tour && Math.round(100 - 100 * tour.cost / initialTravelDistance)}%</td></tr>
                         <tr><th>total saved</th><td>{ tour && Math.round(100 - 100 * (totalDistance - initialTravelDistance + tour.cost) / totalDistance)}%</td></tr>
                     </table>
-                    <!-- G1 / cutting:  -->
+                    <table>
+                        <tr><td><label for="displayCuts" >show carving</label></td> <td><input id="displayCuts" type=checkbox bind:checked={displayCuts} /></td></tr> 
+                        <tr><td><label for="displayZChanges" >show z changes</label></td> <td><input id="displayZChanges" type=checkbox bind:checked={displayZChanges} /></td></tr> 
+                        <tr><td><label for="displayTravel">show travel</label></td> <td><input id="displayTravel" type="checkbox" bind:checked={displayTravel} /></td></tr>
+                    </table>
                     
-                    <br>{file.name} - {fileSize(file.size)} <br>
-                    <button on:click={download}>download</button>
+                    <button on:click={download} disabled={!isSorted} >download {file.name} - {fileSize(file.size)}</button>
                 </div>
             </div>
         </section>
-        <div>
-            <input id="displayCuts" type=checkbox bind:checked={displayCuts} />
-            <label for="displayCuts" >show carving</label>
-        </div>
+        
     {/if}
 
-    <p>Copyright R.Veldkamp, Q42 2022</p>   
+    <footer>
+        <p>Copyright 2022 R.Veldkamp - Q42 - MIT license</p>
+        <img src="https://logo.q42.com/q42-logo.svg" height=42 />
+    </footer>
 </main>
 
 <style>
-    main {
+    h1 {
+        color: #84bc2d;
+    }
+        main {
         max-width: 900px;
         margin: auto;
     }
+    :global(.dropzone p ) {
+        box-sizing: border-box;
+        height: 100%;
+        background-color: inherit !important;
+        outline: 0px !important;
+        border-width: 5px !important;
+    }
+
+    :global(.dropzone p span ) {
+        color: inherit !important;
+    }
     .dropzone {
-        background-color: rgb(198, 198, 198);
+        /* background-color: rgb(198, 198, 198); */
+        
+        box-sizing: border-box;
+        height: 512px;
     }
 
     .dropzone.hide {
@@ -209,24 +235,30 @@
     }
 
     section {
-        background-color:rgb(238 238 238);
+        /* background-color:rgb(238 238 238); */
+        background-color:  rgb(67 67 67);
         display: flex;
         justify-content: space-between;
-        padding: 10px;
+        padding: 20px;
+        border-radius: 10px;
     }
-    
+    .gcode-wrapper {
+        height: 512px;
+    }
+
     :global(.gcode-wrapper  *) {
         position: absolute;
     }
 
     :global(.gcode-wrapper  :last-child) {
-        position: static;
+        xposition: static;
     }
 
     .controls {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        max-width: 260px;
     }
 
     .sorting {
@@ -234,15 +266,37 @@
         flex-direction: column;
     }
 
-    table {
-        text-align: left;
+    .sorting label, .sorting input {
+        width: 49%;
     }
 
-    table td {
+    .sorting label {
+        display: inline-block;
+    }
+
+    table {
+        text-align: left;
+        width: 100%;
+    }
+
+    table  input {
+        margin: 0;
+    }
+
+    table th+td, table td+td  {
         text-align: right;
     }
 
     /* .gcode-wrapper:nth-child(2) {
         position: absolute;
     } */
+
+    footer {
+        margin-top: 60px;
+        text-align: center;
+    }
+    footer img {
+        display: block;
+        margin: auto;
+    }
 </style>
