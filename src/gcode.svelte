@@ -52,8 +52,8 @@
 
     function drawLine(p1, p2, color) {
         ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
+        ctx.moveTo(Math.round(p1.x), Math.round(p1.y));
+        ctx.lineTo(Math.round(p2.x), Math.round(p2.y));
         ctx.stroke();
     }
 
@@ -74,7 +74,7 @@
         const radius = 2;
 
         ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+        ctx.arc(Math.round(x), Math.round(y), radius, 0, Math.round(2 * Math.PI), false);
         ctx.fill();
         ctx.stroke();
     }
