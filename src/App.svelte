@@ -33,8 +33,30 @@
         }
     }
 
+    let totalDistance = 0;
+    function analyzeGCode(lines) {
+        const commands = lines
+            .map(line=>parseLine(line))
+            .filter(cmd => (cmd.g == 0 || cmd.g == 1) && cmd.x !== undefined && cmd.y !== undefined);
+        
+            console.log(commands.length)
+        let prev = { x:0, y:0 };
+        let totalDistance = 0;
+        for (const cmd of commands) {
+            if (cmd )
+            totalDistance += delta(prev, cmd);
+            prev = cmd;
+        }
+        
+        console.log(totalDistance)
+        return {
+            totalDistance
+        }
+    }
+
     async function updateGcode(file) {
         const lines = await getLines(file);
+        ({ totalDistance } = analyzeGCode(lines));
         ({ preamble, cuts: toolpath, postamble } = groupIntoCuts(lines)); //.slice(0,12)
         // console.log(cutList);
         optimizedToolpath = toolpath.slice();
@@ -149,8 +171,13 @@
                 </div>
 
                 <div>
-                    G0 / travel: {tour && Math.round(tour.cost)}mm <br>
-                    (initial {Math.round(initialTravelDistance)}mm) <br>
+                    <table>
+                        <tr><th>initial length</th><td>{Math.round(totalDistance)} mm</td></tr>
+                        <tr><th>initial travel</th><td>{tour && Math.round(initialTravelDistance)} mm</td></tr>
+                        <tr><th>optimized travel</th><td>{tour && Math.round(tour.cost)} mm</td></tr>
+                        <tr><th>travel saved</th><td>{ tour && Math.round(100 - 100 * tour.cost / initialTravelDistance)}%</td></tr>
+                        <tr><th>total saved</th><td>{ tour && Math.round(100 - 100 * (totalDistance - initialTravelDistance + tour.cost) / totalDistance)}%</td></tr>
+                    </table>
                     <!-- G1 / cutting:  -->
                     
                     <br>{file.name} - {fileSize(file.size)} <br>
@@ -205,6 +232,14 @@
     .sorting {
         display: flex;
         flex-direction: column;
+    }
+
+    table {
+        text-align: left;
+    }
+
+    table td {
+        text-align: right;
     }
 
     /* .gcode-wrapper:nth-child(2) {
