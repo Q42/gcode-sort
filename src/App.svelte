@@ -4,7 +4,7 @@
     import Gcode from "./gcode.svelte";
     import { onMount } from "svelte";
     import { two_opt } from "./TwoOpt";
-    import { groupIntoCuts, unParseCuts } from "./parser";
+    import { groupIntoCuts, unParseCuts, parseLine } from "./parser";
 
     let file;
     let cuts, preamble, postamble;
@@ -13,24 +13,8 @@
     let iterations = 40;
     let curIter = 0;
     let displayCuts = true;
-    let progress=0;
+    let progress = 0;
     let isSorted = false;
-
-    function parseLine(line) {
-        const parts = line.split(' ');
-
-        const result = {};
-        for (let i = 0; i < parts.length; i++) {
-            const part = parts[i];
-            const key = part[0];
-            if (key !== undefined) {
-                result[key.toLowerCase()] = parseFloat(part.substring(1));
-            }
-        }
-        // console.log(result);
-
-        return result;
-    }
 
 
     async function getLines(file) {

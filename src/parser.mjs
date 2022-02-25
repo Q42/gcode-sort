@@ -31,8 +31,6 @@ export function groupIntoCuts(lines) {
                 postamble.push(line);
                 break;
         }
-
-        
     }
 
     return {
@@ -58,4 +56,20 @@ export function unParseCuts(preamble, cuts, postamble) {
     // end GCODE
     text += postamble.join('\n');
     return text;
+}
+
+export function parseLine(line) {
+    const parts = line.split(' ');
+
+    const result = {};
+    for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        const key = part[0];
+        if (key !== undefined) {
+            result[key.toLowerCase()] = parseFloat(part.substring(1));
+        }
+    }
+    // console.log(result);
+
+    return result;
 }

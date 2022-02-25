@@ -1,5 +1,6 @@
 <script>
     import { onMount, afterUpdate } from 'svelte';
+    import { parseLine } from './parser';
     export let cutList = null;
     export let draw = null;
     let canvas;
@@ -47,22 +48,6 @@
             drawCut(point, cut.cutLines);
             prev = point;
         }
-    }
-
-    function parseLine(line) {
-        const parts = line.split(' ');
-
-        const result = {};
-        for (let i = 0; i < parts.length; i++) {
-            const part = parts[i];
-            const key = part[0];
-            if (key !== undefined) {
-                result[key.toLowerCase()] = parseFloat(part.substring(1));
-            }
-        }
-        // console.log(result);
-
-        return result;
     }
 
     function drawLine(p1, p2, color) {
