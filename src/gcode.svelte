@@ -9,18 +9,15 @@
     function drawAll() {
         if (draw == 'cuts') {
             ctx.strokeStyle = '#a3751b';
-            ctx.lineWidth = 1;
             drawCuts();
         }
 
         if (draw == 'travel') {
             ctx.strokeStyle = 'red';
-            ctx.lineWidth = 2;
             drawMoves();
         }
         
         if (draw == 'points') {
-            ctx.lineWidth = 1;
             ctx.fillStyle = '#84bc2d';
             ctx.strokeStyle = '#84bc2d';
             drawPoints();
