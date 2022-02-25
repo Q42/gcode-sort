@@ -132,7 +132,7 @@
 </script>
 
 <main>
-    <h1>GCODE sorter</h1>
+    <h1>GCODE sort</h1>
     <p>Re-order the operations in a GCODE file to reduce the time spent moving the bit (G0) vs cutting or carving (G1)</p>
     <!-- <p>WARNING: this changes the order of the cuts</p>
     <p>assumes: absolute mode</p> -->
