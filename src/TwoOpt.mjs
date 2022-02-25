@@ -1,3 +1,4 @@
+// http://pedrohfsd.com/2017/08/11/2opt-part2.html
 function two_opt(currentTour, distance){
     const n = currentTour.vertices.length;
     let bestTour = currentTour;
