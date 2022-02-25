@@ -51,7 +51,7 @@
             
             // startPos
             const prevPos =  prev || {x:0, y:0};
-            const nextPos =  parseLine( cut.move) ;
+            const nextPos =  cut.parsedMove; // parseLine( cut.move) ;
             const d = delta (prevPos, nextPos);
             // console.log( prevPos, nextPos, d);
             

@@ -15,7 +15,11 @@ export function groupIntoCuts(lines) {
                 mode = 'cuts';
             case 'cuts':
                 if (line.startsWith('G0')) {
-                    currentCut = { move: line, cutLines: [] };
+                    currentCut = { 
+                        move: line, 
+                        parsedMove: parseLine(line),
+                        cutLines: []
+                    };
                     cuts.push(currentCut);
                     break;
                 }

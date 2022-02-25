@@ -26,7 +26,7 @@
         let prev = {x:0, y:0};
         drawPoint(prev.x, prev.y, "green");
         for (const cut of cutList) {
-            const point = parseLine(cut.move);
+            const point = cut.parsedMove; // parseLine(cut.move);
             drawPoint(point.x, point.y, "blue");
             prev = point;
         }
@@ -34,7 +34,7 @@
     function drawMoves() {
         let prev = {x:0, y:0};
         for (const cut of cutList) {
-            const point = parseLine(cut.move);
+            const point = cut.parsedMove; //parseLine(cut.move);
             drawLine(prev, point, 'black');
             // console.log(prev, point);
             prev = point;
@@ -44,7 +44,7 @@
     function drawCuts() {
         let prev = {x:0, y:0};
         for (const cut of cutList) {
-            const point = parseLine(cut.move);
+            const point = cut.parsedMove; // parseLine(cut.move);
             drawCut(point, cut.cutLines);
             prev = point;
         }
