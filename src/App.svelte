@@ -4,10 +4,10 @@
     import Gcode from "./gcode.svelte";
     import { onMount } from "svelte";
     import { two_opt } from "./TwoOpt";
-    import { groupIntoCuts } from "./parser";
+    import { groupIntoCuts, unParseCuts } from "./parser";
 
     let file;
-    let cutList;
+    let cuts, preamble, postamble;
     let tour;
     let initialTravelDistance;
     let iterations = 40;
@@ -50,12 +50,11 @@
 
     async function updateGcode(file) {
         const lines = await getLines(file);
-        const { preamble, cuts, postamble } = groupIntoCuts(lines); //.slice(0,12)
-        cutList = cuts;
+        ({ preamble, cuts, postamble } = groupIntoCuts(lines)); //.slice(0,12)
         // console.log(cutList);
-        initialTravelDistance = distanceCutList( cutList );
+        initialTravelDistance = distanceCutList( cuts );
         tour = {
-            vertices : cutList,
+            vertices : cuts,
             cost : initialTravelDistance
         };
     }
@@ -90,7 +89,7 @@
             }
             tour = two_opt(tour, distanceCutList);
 
-            cutList = tour.vertices;
+            cuts = tour.vertices;
             // console.log(tour.cost, tour.vertices.length);
 
             curIter++;
@@ -104,15 +103,7 @@
     }
 
     function download() {
-        let text = '';
-        // TODO start GCODE
-        for (const cut of tour.vertices) {
-            text += cut.move + '\n';
-            for (const line of cut.cutLines) {
-                text += line + '\n';
-            }
-        }
-        // TODO end GCODE
+        let text = unParseCuts(preamble, cuts, postamble);
 
         const el = document.createElement('a');
         el.setAttribute('href','data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -147,12 +138,12 @@
     {#if file}
         <section>
             <div class="gcode-wrapper">
-                {#if cutList}
+                {#if cuts}
                     {#if displayCuts}
-                        <Gcode cutList={cutList} draw="cuts" />
+                        <Gcode cutList={cuts} draw="cuts" />
                     {/if}
-                    <Gcode cutList={cutList} draw="points" />
-                    <Gcode cutList={cutList} draw="travel" />
+                    <Gcode cutList={cuts} draw="points" />
+                    <Gcode cutList={cuts} draw="travel" />
                 {/if}
             </div>
 
