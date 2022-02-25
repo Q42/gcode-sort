@@ -1,5 +1,8 @@
 import { groupIntoCuts } from './parser.mjs';
 
-test('adds 1 + 2 to equal 3', () => {
-    expect(groupIntoCuts([])).toBe(3);
-});
+test('a successfull parse returns a result with preamble, cuts and postamble', ()=> {
+    const result = groupIntoCuts([]);
+    expect(result).toHaveProperty('preamble');
+    expect(result).toHaveProperty('cuts');
+    expect(result).toHaveProperty('postamble');
+})

@@ -1,5 +1,5 @@
 export function groupIntoCuts(lines) {
-    const cuts = [];
+    const preamble = [], cuts = [], postamble = [];
     let currentCut;
 
     for (let l = 0; l < lines.length; l++) {
@@ -13,5 +13,9 @@ export function groupIntoCuts(lines) {
             currentCut.cutLines.push(line);
         }
     }
-    return cuts;
+    return {
+        preamble,
+        cuts,
+        postamble
+    };
 }

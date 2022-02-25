@@ -50,7 +50,8 @@
 
     async function updateGcode(file) {
         const lines = await getLines(file);
-        cutList = groupIntoCuts(lines); //.slice(0,12)
+        const { preamble, cuts, postamble } = groupIntoCuts(lines); //.slice(0,12)
+        cutList = cuts;
         // console.log(cutList);
         initialTravelDistance = distanceCutList( cutList );
         tour = {
