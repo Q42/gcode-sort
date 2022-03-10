@@ -9,7 +9,7 @@ Optimize a GCODE file by reducing the total time spent moving the bit (G0) vs cu
 
 ### Features
  - should work with gcode from Easel
- - fast optimization using the TwoUp algorithm that is commonly used for solving the Traveling Salesman Problem.
+ - fast optimization using the [2-opt algorithm](https://en.wikipedia.org/wiki/2-opt) that is commonly used for solving the [Traveling Salesman Problem](https://en.wikipedia.org/wiki/Travelling_salesman_problem).
  - option to show/hide travel/cutting/z changes.
  - reports what you save (in term of total distance)
  - download the optimized file
