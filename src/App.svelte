@@ -197,14 +197,37 @@
         
     {/if}
 
+    <article>
+        <h2 id="what-is-it-">What is it?</h2>
+<p>This tool will optimize a toolpath&#39;s total distance and therefore it will reduce the total run time. It does this by re-ordering the cuts such that the &#39;travel&#39; distance (ie &#39;not cutting&#39;) is minimized.</p>
+<h2 id="how-to-use-it-">How to use it?</h2>
+<p>Drag &#39;n drop your gcode file.
+Press the &#39;sort&#39; button.
+Check the preview if the design still looks good.
+If so, click on the download button for the optimized file.</p>
+<h2 id="why-did-i-create-this-">Why did I create this?</h2>
+<p>I was routing a design for a friend, the chessboard in the example, and we noticed how inefficient the toolpath was. We were joking that even a random order would have been more efficient and it was probably true.
+So I created this tool to address that, albeit after the job was already done. So I guess it was more for the fun of it ;-)</p>
+<h2 id="caveats">Caveats</h2>
+<ul>
+<li><p>It was created to work with gcode files from Easel. It will most likely not work with gcode files from other sources. This is because gcode is a very loose standard and it is impossible to be compatible with all possible flavors.</p>
+</li>
+<li><p>It may also not work properly with some other gcode files from Easel as I have only tested with a handful files so far :-)</p>
+</li>
+<li><p>In short: I give no guarantees that it will work properly so please be careful.</p>
+</li>
+</ul>
+
+    </article>
     <footer>
-        <p>Copyright 2022 R.Veldkamp - Q42 - MIT license</p>
+        <p>Copyright 2022 R.Veldkamp - <a href='https://www.q42.nl/en'>Q42 - MIT license</p>
+        <p><a href='https://github.com/Q42/gcode-sort'>source</a> - <a href='https://github.com/Q42/gcode-sort/issues/new'>report an issue</a></p>
         <img src="https://logo.q42.com/q42-logo.svg" height=42 />
     </footer>
 </main>
 
 <style>
-    h1 {
+    h1,h2,a {
         color: #84bc2d;
     }
         main {
