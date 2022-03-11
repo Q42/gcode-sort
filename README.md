@@ -23,3 +23,5 @@ If you encounter a bug or have a gcode file that wasn't handled properly, please
 ## Want to contribute? Request a feature?
 Any help is appreciated. Send in a PR or reach out to me.
 
+## Thanks
+Thank to @pedrohfsd for his javascript version of the 2-opt algorithm. I used it because it was easy to understand and adapt.
