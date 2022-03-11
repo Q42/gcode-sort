@@ -198,7 +198,9 @@
     {/if}
 
     <article>
+        <img class="preview" width=200 src="gcode_sort.gif" />
         <h2 id="what-is-it-">What is it?</h2>
+        
 <p>This tool will optimize a toolpath&#39;s total distance and therefore it will reduce the total run time. It does this by re-ordering the cuts such that the &#39;travel&#39; distance (ie &#39;not cutting&#39;) is minimized.</p>
 <h2 id="how-to-use-it-">How to use it?</h2>
 <p>Drag &#39;n drop your gcode file.
@@ -220,7 +222,7 @@ So I created this tool to address that, albeit after the job was already done. S
 
     </article>
     <footer>
-        <p>Copyright 2022 R.Veldkamp - <a href='https://www.q42.nl/en'>Q42 - MIT license</p>
+        <p>Made with <span title='passion'>❤️</span> by <a href="https://twitter.com/remcoder">R.Veldkamp</a> @ <a href='https://www.q42.nl/en'>Q42</a></p>
         <p><a href='https://github.com/Q42/gcode-sort'>source</a> - <a href='https://github.com/Q42/gcode-sort/issues/new'>report an issue</a></p>
         <img src="https://logo.q42.com/q42-logo.svg" height=42 />
     </footer>
@@ -230,7 +232,11 @@ So I created this tool to address that, albeit after the job was already done. S
     h1,h2,a {
         color: #84bc2d;
     }
-        main {
+    img.preview {
+        float: right;
+        margin: 10px;
+    }
+    main {
         max-width: 900px;
         margin: auto;
     }
