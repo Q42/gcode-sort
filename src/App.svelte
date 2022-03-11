@@ -132,6 +132,7 @@
 </script>
 
 <main>
+    <a href="https://blog.q42.nl/passietijd/"><img class='passietijd-logo' src='passietijd_project.png' /></a>
     <h1>GCODE sort</h1>
     <p>Re-order the operations in a GCODE file to reduce the time spent moving the bit (G0) vs cutting or carving (G1)</p>
     <!-- <p>WARNING: this changes the order of the cuts</p>
@@ -235,6 +236,14 @@ So I created this tool to address that, albeit after the job was already done. S
     img.preview {
         float: right;
         margin: 10px;
+    }
+
+    img.passietijd-logo {
+        position: absolute;
+        transform: rotate(45deg);
+        right:0;
+        top:0;
+        width: 200px;
     }
     main {
         max-width: 900px;
