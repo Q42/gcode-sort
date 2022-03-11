@@ -134,7 +134,8 @@
 <main>
     <a href="https://blog.q42.nl/passietijd/"><img class='passietijd-logo' src='passietijd_project.png' /></a>
     <h1>GCODE sort</h1>
-    <p>Re-order the operations in a GCODE file to reduce the time spent moving the bit (G0) vs cutting or carving (G1)</p>
+    <p>GCode toolpaths too long? Reduce travel by sorting the cuts. Should work with Easel.</p>
+    <!-- <p>Re-order the operations in a GCODE file to reduce the time spent moving the bit (G0) vs cutting or carving (G1)</p> -->
     <!-- <p>WARNING: this changes the order of the cuts</p>
     <p>assumes: absolute mode</p> -->
 
@@ -223,7 +224,7 @@ So I created this tool to address that, albeit after the job was already done. S
 
     </article>
     <footer>
-        <p>Made with <span title='passion'>❤️</span> by <a href="https://twitter.com/remcoder">R.Veldkamp</a> @ <a href='https://www.q42.nl/en'>Q42</a></p>
+        <p>Made with <span title='passion'>❤️</span> by <a href="https://twitter.com/remcoder">Remco</a> @ <a href='https://www.q42.nl/en'>Q42</a></p>
         <p><a href='https://github.com/Q42/gcode-sort'>source</a> - <a href='https://github.com/Q42/gcode-sort/issues/new'>report an issue</a></p>
         <img src="https://logo.q42.com/q42-logo.svg" height=42 />
     </footer>
@@ -241,8 +242,8 @@ So I created this tool to address that, albeit after the job was already done. S
     img.passietijd-logo {
         position: absolute;
         transform: rotate(45deg);
-        right:0;
-        top:0;
+        right:10px;
+        top:10px;
         width: 200px;
     }
     main {
